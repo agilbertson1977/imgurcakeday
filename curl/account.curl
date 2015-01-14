@@ -1,5 +1,5 @@
 echo ""
 echo ""
-curl -i -H "Authorization: Client-ID 07aa352eac57a48" https://api.imgur.com/3/account/AndyTheAbsurd
+curl -i -H "Authorization: Client-ID 07aa352eac57a48" https://api.imgur.com/3/account/nosuchuser
 echo ""
 echo ""

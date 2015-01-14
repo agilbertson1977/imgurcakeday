@@ -34,32 +34,40 @@ function processRequest(CakeDayRequest, CakeDayResponse) {
       });
       ApiRes.on('end', function() { 
         var ApiResJSON = JSON.parse(ApiResData);
-        CakeDayResponse.writeHead(200, {"Content-Type": "text/html"});
-        //CakeDayResponse.write(JSON.stringify(ApiResJSON, null, 2));
-        var d = new Date(ApiResJSON.data.created * 1000);
-        var dd = "";
-        switch (d.getMonth()) {
-          case  0: dd+="Jan "; break;
-          case  1: dd+="Feb "; break;
-          case  2: dd+="Mar "; break;
-          case  3: dd+="Apr "; break;
-          case  4: dd+="May "; break;
-          case  5: dd+="Jun "; break;
-          case  6: dd+="Jul "; break;
-          case  7: dd+="Aug "; break;
-          case  8: dd+="Sep "; break;
-          case  9: dd+="Oct "; break;
-          case 10: dd+="Nov "; break;
-          case 11: dd+="Dec "; break;
+        if(ApiResJSON.success) {
+          CakeDayResponse.writeHead(200, {"Content-Type": "text/html"});
+          //CakeDayResponse.write(JSON.stringify(ApiResJSON, null, 2));
+          var d = new Date(ApiResJSON.data.created * 1000);
+          var dd = "";
+          switch (d.getMonth()) {
+            case  0: dd+="Jan "; break;
+            case  1: dd+="Feb "; break;
+            case  2: dd+="Mar "; break;
+            case  3: dd+="Apr "; break;
+            case  4: dd+="May "; break;
+            case  5: dd+="Jun "; break;
+            case  6: dd+="Jul "; break;
+            case  7: dd+="Aug "; break;
+            case  8: dd+="Sep "; break;
+            case  9: dd+="Oct "; break;
+            case 10: dd+="Nov "; break;
+            case 11: dd+="Dec "; break;
+          }
+          dd += d.getDate() + ", ";
+          dd += d.getFullYear();
+          var intermediateResponse = respage.replace(/:account:/g, account);
+          var thisResponse = intermediateResponse.replace(":cakeday:", dd);
+          CakeDayResponse.write(thisResponse);
+          CakeDayResponse.end();
+          console.log("response for " + account + " sent");
+        } else {
+          CakeDayResponse.writeHead(200, {"Content-Type": "text/html"});
+          var intermediateResponse = respage.replace(":account:", "");
+          intermediateResponse = intermediateResponse.replace(":account:'s cake day is <b>:cakeday:</b>.", "Sorry, no such user on imgur!");
+          CakeDayResponse.write(intermediateResponse);
+          CakeDayResponse.end();
+          console.log("Invalid account entered");
         }
-        dd += d.getDate() + ", ";
-        dd += d.getFullYear();
-        var intermediateResponse = respage.replace(":account:", account);
-        intermediateResponse = intermediateResponse.replace(":account:", account);
-        var thisResponse = intermediateResponse.replace(":cakeday:", dd);
-        CakeDayResponse.write(thisResponse);
-        CakeDayResponse.end();
-        console.log("response for " + account + " sent");
       });
     });
     ApiReq.end();

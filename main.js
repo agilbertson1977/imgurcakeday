@@ -9,6 +9,9 @@ var config = JSON.parse(fs.readFileSync('config.json'));
 var homepage = fs.readFileSync('main_page.html');
 var respage = new String(fs.readFileSync('response_page.html'));
 
+var monthNames = [  "January", "February", "March", "April", "May", "June",
+                    "July", "August", "September", "October", "November", "December" ];
+
 var httpsOptions = {
   hostname: "api.imgur.com",
   port: 443,
@@ -39,21 +42,8 @@ function processRequest(CakeDayRequest, CakeDayResponse) {
           //CakeDayResponse.write(JSON.stringify(ApiResJSON, null, 2));
           var d = new Date(ApiResJSON.data.created * 1000);
           var dd = "";
-          switch (d.getMonth()) {
-            case  0: dd+="Jan "; break;
-            case  1: dd+="Feb "; break;
-            case  2: dd+="Mar "; break;
-            case  3: dd+="Apr "; break;
-            case  4: dd+="May "; break;
-            case  5: dd+="Jun "; break;
-            case  6: dd+="Jul "; break;
-            case  7: dd+="Aug "; break;
-            case  8: dd+="Sep "; break;
-            case  9: dd+="Oct "; break;
-            case 10: dd+="Nov "; break;
-            case 11: dd+="Dec "; break;
-          }
           dd += d.getDate() + ", ";
+          dd += monthNames[d.getMonth()];
           dd += d.getFullYear();
           var intermediateResponse = respage.replace(/:account:/g, account);
           var thisResponse = intermediateResponse.replace(":cakeday:", dd);
